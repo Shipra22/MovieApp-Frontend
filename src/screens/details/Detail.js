@@ -6,6 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import './details.css';
 import Home from '../home/Home';
 import YouTube from 'react-youtube';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+
+
+
 
 class Detail extends Component {
     constructor() {
@@ -32,9 +38,13 @@ class Detail extends Component {
     _onReady(event) {
         // access to player in all event handlers via event.target
         event.target.pauseVideo();
-      }
+    }
+    artistClickHandler = (url) => {
+        window.location = url;
+    }
     render() {
         let movie = this.state.movie;
+
         const opts = {
             height: '300',
             width: '700',
@@ -84,23 +94,40 @@ class Detail extends Component {
                             </Typography>
                         </div>
                         <div className="trailer">
-                            <Typography > 
+                            <Typography >
                                 <span className="bold">Trailer :</span>
-                             </Typography>
-                             <YouTube
+                            </Typography>
+                            <YouTube
                                 videoId={movie.trailer_url.split("?v=")[1]}
                                 opts={opts}
                                 onReady={this._onReady}
                             />
 
+                        </div>
+
+
                     </div>
-
-
+                    <div className="rightDetails">
+                        <div>
+                            <Typography>
+                                <span className="bold">Artists:</span>
+                            </Typography>
+                        </div>
+                        <div >
+                            <GridList cellHeight={160} cols={2}>
+                                {movie.artists != null && movie.artists.map(artist => (
+                                    <GridListTile
+                                        className="gridTitle"
+                                        onClick={() => this.artistClickHandler(artist.wiki_url)}
+                                        key={artist.id}>
+                                        <img src={artist.profile_url} className="artist-photo" alt={artist.first_name + " " + artist.last_name} />
+                                        <GridListTileBar title={artist.first_name + " " + artist.last_name} />
+                                    </GridListTile>
+                                ))}
+                            </GridList>
+                        </div>
+                    </div>
                 </div>
-                <div className="rightDetails">
-
-                </div>
-            </div>
             </div >);
     }
 }
