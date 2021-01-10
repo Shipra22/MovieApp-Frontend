@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import Header from '../../common/header/Header';
 import moviesData from '../../assets/movieData';
 import Typography from '@material-ui/core/Typography';
 import './details.css';
+import Home from '../home/Home';
+import YouTube from 'react-youtube';
 
 class Detail extends Component {
     constructor() {
@@ -11,6 +14,7 @@ class Detail extends Component {
             movie: {}
         }
     }
+
     componentWillMount() {
         let currentState = this.state;
         currentState.movie = moviesData.filter(
@@ -21,11 +25,31 @@ class Detail extends Component {
         this.setState({ currentState });
         console.log(this.state);
     }
+
+    backHandler = () => {
+        ReactDOM.render(<Home />, document.getElementById("root"));
+    }
+    _onReady(event) {
+        // access to player in all event handlers via event.target
+        event.target.pauseVideo();
+      }
     render() {
         let movie = this.state.movie;
+        const opts = {
+            height: '300',
+            width: '700',
+            playerVars: {
+                autoplay: 1
+            }
+        }
         return (
             <div className="details">
                 <Header />
+                <div className="back">
+                    <Typography>
+                        <span onClick={this.backHandler} >&#60; Back To home</span>
+                    </Typography>
+                </div>
                 <div className="flex-containerDetails">
                     <div className="leftDetails">
                         <img src={movie.poster_url} alt={movie.title} />
@@ -58,15 +82,26 @@ class Detail extends Component {
                             <Typography>
                                 <span className="bold">Plot: </span> <a href={movie.wiki_url}>(Wiki Link)</a>{movie.storyline}
                             </Typography>
-                        </div>                           
-
+                        </div>
+                        <div className="trailer">
+                            <Typography > 
+                                <span className="bold">Trailer :</span>
+                             </Typography>
+                             <YouTube
+                                videoId={movie.trailer_url.split("?v=")[1]}
+                                opts={opts}
+                                onReady={this._onReady}
+                            />
 
                     </div>
-                    <div className="rightDetails">
 
-                    </div>
+
                 </div>
-            </div>);
+                <div className="rightDetails">
+
+                </div>
+            </div>
+            </div >);
     }
 }
 export default Detail;
