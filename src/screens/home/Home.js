@@ -12,6 +12,12 @@ import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
+import genres from "../../common/genre";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+
 
 const styles = theme => ({
     root: {
@@ -49,12 +55,16 @@ class Home extends Component {
     constructor() {
         super();
         this.state = {
-            movieName: ""
+            movieName: "",
+            genres: []
         }
     }
 
     movieNameChangeHandler = event => {
         this.setState({ movieName: event.target.value });
+    }
+    genreSelectHandler = event => {
+        this.setState({ genres: event.target.value });
     }
 
     render() {
@@ -88,20 +98,40 @@ class Home extends Component {
                         </div>
                         <div className="right">
 
-                        <Card>
-                            <CardContent>
-                                <FormControl className={classes.formControl}>
-                                    <Typography className={classes.title} color="textSecondary">
-                                        FIND MOVIES BY:
+                            <Card>
+                                <CardContent>
+                                    <FormControl className={classes.formControl}>
+                                        <Typography className={classes.title} color="textSecondary">
+                                            FIND MOVIES BY:
                                     </Typography>
-                                </FormControl>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="movieName">Movie Name</InputLabel>
-                                    <Input id="movieName" onChange={this.movieNameChangeHandler} />
-                                </FormControl>
-                            </CardContent>
-                        </Card>
-                    </div>
+                                    </FormControl>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="movieName">Movie Name</InputLabel>
+                                        <Input id="movieName" onChange={this.movieNameChangeHandler} />
+                                    </FormControl>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-multiple-checkbox">Genres</InputLabel>
+                                        <Select
+                                            multiple
+                                            input={<Input id="select-multiple-checkbox" />}
+                                            renderValue={selected => selected.join(',')}
+                                            value={this.state.genres}
+                                            onChange={this.genreSelectHandler}
+                                        >
+
+                                        <MenuItem value="0">None</MenuItem>
+                                        {genres.map(genre => (
+                                            <MenuItem key={genre.id} value={genre.name}>
+                                                <Checkbox checked={this.state.genres.indexOf(genre.name) > -1} />
+                                                <ListItemText primary={genre.name} />
+                                            </MenuItem>
+                                        ))}
+                                        </Select>
+
+                                </FormControl >
+                                </CardContent>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </div>
