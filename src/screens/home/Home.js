@@ -60,7 +60,8 @@ class Home extends Component {
             movieName: "",
             upcomingMovies: [],
             releasedMovies: [],
-            genres: [],
+            genres: [], // genre user select
+            genresList:[],//genre from api
             artists: [],
 
         }
@@ -94,6 +95,22 @@ class Home extends Component {
         xhrReleased.open("GET", this.props.baseUrl + "movies?status=RELEASED");
         xhrReleased.setRequestHeader("Cache-Control", "no-cache");
         xhrReleased.send(dataReleased);
+
+        // getting genre from api
+        let dataGenres= null;
+        let xhrGenres = new XMLHttpRequest();
+        xhrGenres.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    genresList: JSON.parse(this.responseText).genres
+                });
+            }
+        });
+
+        xhrGenres.open("GET", this.props.baseUrl + "genres");
+        xhrGenres.setRequestHeader("Cache-Control", "no-cache");
+        xhrGenres.send(dataGenres);
+
     }
 
 
@@ -167,10 +184,10 @@ class Home extends Component {
                                         >
 
 
-                                            {genres.map(genre => (
-                                                <MenuItem key={genre.id} value={genre.name}>
-                                                    <Checkbox checked={this.state.genres.indexOf(genre.name) > -1} />
-                                                    <ListItemText primary={genre.name} />
+                                            {this.state.genresList.map(genre => (
+                                                <MenuItem key={"genre"+genre.id} value={genre.genre}>
+                                                    <Checkbox checked={this.state.genres.indexOf(genre.genre) > -1} />
+                                                    <ListItemText primary={genre.genre} />
                                                 </MenuItem>
                                             ))}
                                         </Select>
