@@ -2,13 +2,21 @@
     height: 36px;
     padding: 8px 32px 8px 16px;
     background-color: black;
+  
     
    
 }
+
 .login-btn{
     float: right;
     
 }
+.book-show-btn {
+    float: right;
+    margin-right: 8px;
+}
+
+
 
 /* for logo animation */
 .app-logo {
@@ -18,6 +26,10 @@
     /* margin:10px 10px 10px 10px; */
    
  }
+ .bookshow-button {
+    float: right;
+    margin-right: 8px;
+}
  
  @keyframes app-logo-spin {
     from { transform: scaleX(-1); }

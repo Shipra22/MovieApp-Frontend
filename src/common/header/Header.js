@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import './Header.css';
 import Button from '@material-ui/core/Button';
 import logo from '../../assets/logo.svg';
@@ -11,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import BookShow from '../../screens/bookShow/BookShow';
 
 
 
@@ -52,8 +54,8 @@ class Header extends Component {
             lastname: "",
             emailRequired: "dispNone",
             email: "",
-            registerPasswordRequired:"dispNone",
-            registerPassword:"",
+            registerPasswordRequired: "dispNone",
+            registerPassword: "",
             contactNoRequired: "dispNone",
             contactNo: "",
 
@@ -65,24 +67,30 @@ class Header extends Component {
     }
 
     closeModalHandler = () => {
-        this.setState({ modalIsOpen: false, usernameRequired: "dispNone", username: "",  loginPasswordRequired: "dispNone",loginPassword:"", value: 0 });
+        this.setState({ modalIsOpen: false, usernameRequired: "dispNone", username: "", loginPasswordRequired: "dispNone", loginPassword: "", value: 0 });
     }
     tabChangeHandler = (event, value) => {
-        this.setState({ value:value, 
+        this.setState({
+            value: value,
             usernameRequired: "dispNone", username: "",
-            loginPasswordRequired: "dispNone",loginPassword:"",
-            firstnameRequired:"dispNone",  firstname:"",
-            lastnameRequired:"dispNone", lastname:"",
-            emailRequired :"dispNone",email :"",
-            registerPasswordRequired:"dispNone", registerPassword:"",
-            contactNoRequired :"dispNone",contactNo:""
+            loginPasswordRequired: "dispNone", loginPassword: "",
+            firstnameRequired: "dispNone", firstname: "",
+            lastnameRequired: "dispNone", lastname: "",
+            emailRequired: "dispNone", email: "",
+            registerPasswordRequired: "dispNone", registerPassword: "",
+            contactNoRequired: "dispNone", contactNo: ""
 
-         })
+        })
     }
 
     loginClickHandler = () => {
         this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
         this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
+    }
+    bookShowHandler = (e) => {
+        ReactDOM.render(<BookShow />, document.getElementById('root')
+        );
+
     }
 
     inputUsernameChangeHandler = (e) => {
@@ -124,6 +132,11 @@ class Header extends Component {
                     <div className="login-btn">
                         <Button variant="contained" color="default" onClick={this.openModalHandler}>Login</Button>
                     </div>
+                    {this.props.showBookShowButton === "true" ?
+                        <div className="book-show-btn">
+                            <Button variant="contained" color="primary" onClick={this.bookShowHandler}> Book Show</Button>
+                        </div> : ""}
+
                 </header>
                 <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login" onRequestClose={this.closeModalHandler} style={customStyles}>
                     <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}  >
