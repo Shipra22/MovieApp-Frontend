@@ -94,7 +94,7 @@ class Detail extends Component {
         }
         return (
             <div className="details">
-                 <Header id={this.props.match.params.id} showBookShowButton="true" />
+                 <Header baseUrl={this.props.baseUrl} id={this.props.match.params.id} showBookShowButton="true" />
                 <div className="back">
                 <Typography>
                         <Link to="/">  &#60; Back to Home</Link>

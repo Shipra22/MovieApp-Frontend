@@ -38,7 +38,7 @@ class BookShow extends Component {
 
 
 
-   
+
 
     locationChangeHandler = (event) => {
         this.setState({ location: event.target.value });
@@ -64,7 +64,7 @@ class BookShow extends Component {
         this.state.showDate === "" ? this.setState({ showDateRequired: "dispBlock" }) : this.setState({ showDateRequired: "dispNone" })
         this.state.showTime === "" ? this.setState({ showTimeRequired: "dispBlock" }) : this.setState({ showTimeRequired: "dispNone" })
         this.state.tickets === "" || this.state.tickets === 0 ? this.setState({ ticketsRequired: "dispBlock" }) : this.setState({ ticketsRequired: "dispNone" })
-        
+
         if ((this.state.location === "") || (this.state.language === "") || (this.state.showTime === "") || (this.state.showDate === "") || (this.state.tickets === 0)) { return; }
 
         this.props.history.push({
@@ -77,9 +77,9 @@ class BookShow extends Component {
     render() {
         return (
             <div>
-                <Header />
+                <Header baseUrl={this.props.baseUrl} />
                 <div className="bookShow">
-                <Typography className="back" >
+                    <Typography className="back" >
                         <Link to={"/movie/" + this.props.match.params.id}>&#60; Back to Movie Details</Link>
                     </Typography>s
 

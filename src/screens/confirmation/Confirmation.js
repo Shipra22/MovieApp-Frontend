@@ -85,7 +85,7 @@ class Confirmation extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <Header />
+                <Header baseUrl={this.props.baseUrl} />
                 <div className="confirmation marginTop16">
                     <div>
                         <Link to={"/bookshow/" + this.props.match.params.id}>
