@@ -80,6 +80,14 @@ class Header extends Component {
     closeModalHandler = () => {
         this.setState({ modalIsOpen: false });
     }
+    logoutHandler = (e) => {
+        sessionStorage.removeItem("uuid");
+        sessionStorage.removeItem("access-token");
+
+        this.setState({
+            loggedIn: false
+        });
+    }
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
@@ -168,11 +176,21 @@ class Header extends Component {
             <div>
                 <header className="app-header">
                     <img src={logo} className="app-logo" alt="Movies App Logo" />
-                    <div className="login-button">
-                        <Button variant="contained" color="default" onClick={this.openModalHandler}>
-                            Login
-                        </Button>
-                    </div>
+
+                    {!this.state.loggedIn ?
+                        <div className="login-button">
+                            <Button variant="contained" color="default" onClick={this.openModalHandler}>
+                                Login
+                            </Button>
+                        </div>
+                        :
+                        <div className="login-button">
+                            <Button variant="contained" color="default" onClick={this.logoutHandler}>
+                                Logout
+                            </Button>
+                        </div>
+                    }
+                   
                     {this.props.showBookShowButton === "true" ?
                         <div className="bookshow-button">
                             <Link to={"/bookshow/" + this.props.id}>
