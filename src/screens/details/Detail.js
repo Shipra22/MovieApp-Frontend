@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Header from '../../common/header/Header';
-import moviesData from '../../assets/movieData';
 import Typography from '@material-ui/core/Typography';
 import './details.css';
 
