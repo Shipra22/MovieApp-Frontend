@@ -58,13 +58,16 @@ class Home extends Component {
             upcomingMovies: [],
             releasedMovies: [],
             genres: [], // genre user select
-            genresList:[],//genre from api
+            genresList: [],//genre from api
             artists: [], //artists user selects
-            artistsList:[], //artists from api
+            artistsList: [], //artists from api
+            releaseDateStart: "",
+            releaseDateEnd: "",
 
         }
     }
     componentWillMount() {
+        //getting upcoming movies
         let data = null;
         let xhr = new XMLHttpRequest();
         let that = this;
@@ -80,6 +83,7 @@ class Home extends Component {
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.send(data);
 
+        //getting released movies
         let dataReleased = null;
         let xhrReleased = new XMLHttpRequest();
         xhrReleased.addEventListener("readystatechange", function () {
@@ -95,7 +99,7 @@ class Home extends Component {
         xhrReleased.send(dataReleased);
 
         // getting genre from api
-        let dataGenres= null;
+        let dataGenres = null;
         let xhrGenres = new XMLHttpRequest();
         xhrGenres.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
@@ -109,23 +113,56 @@ class Home extends Component {
         xhrGenres.setRequestHeader("Cache-Control", "no-cache");
         xhrGenres.send(dataGenres);
 
-         // getting artists from api
-         let dataArtists= null;
-         let xhrArtists = new XMLHttpRequest();
-         xhrArtists.addEventListener("readystatechange", function () {
-             if (this.readyState === 4) {
-                 that.setState({
-                     artistsList: JSON.parse(this.responseText).artists
-                 });
-             }
-         });
- 
-         xhrArtists.open("GET", this.props.baseUrl + "artists");
-         xhrArtists.setRequestHeader("Cache-Control", "no-cache");
-         xhrArtists.send(dataArtists);
+        // getting artists from api
+        let dataArtists = null;
+        let xhrArtists = new XMLHttpRequest();
+        xhrArtists.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    artistsList: JSON.parse(this.responseText).artists
+                });
+            }
+        });
+
+        xhrArtists.open("GET", this.props.baseUrl + "artists");
+        xhrArtists.setRequestHeader("Cache-Control", "no-cache");
+        xhrArtists.send(dataArtists);
 
     }
+    filterApplyHandler = () => {
+        let queryString = "?status=RELEASED";
+        if (this.state.movieName !== "") {
+            queryString += "&title=" + this.state.movieName;
+        }
+        if (this.state.genres.length > 0) {
+            queryString += "&genres=" + this.state.genres.toString();
+        }
+        if (this.state.artists.length > 0) {
+            queryString += "&artists=" + this.state.artists.toString();
+        }
+        if (this.state.releaseDateStart !== "") {
+            queryString += "&start_date=" + this.state.releaseDateStart;
+        }
+        if (this.state.releaseDateEnd !== "") {
+            queryString += "&end_date=" + this.state.releaseDateEnd;
+        }
 
+        //getting Filtered  movies
+        let that = this;
+        let dataFilter = null;
+        let xhrFilter = new XMLHttpRequest();
+        xhrFilter.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    releasedMovies: JSON.parse(this.responseText).movies
+                });
+            }
+        });
+
+        xhrFilter.open("GET", this.props.baseUrl + "movies" + encodeURI(queryString));
+        xhrFilter.setRequestHeader("Cache-Control", "no-cache");
+        xhrFilter.send(dataFilter);
+    }
 
     movieNameChangeHandler = event => {
         this.setState({ movieName: event.target.value });
@@ -139,7 +176,12 @@ class Home extends Component {
     movieClickHandler = (movieId) => {
         this.props.history.push('/movie/' + movieId);
     }
-
+    releaseDateStart = event => {
+        this.setState({ releaseDateStart: event.target.value });
+    }
+    releaseDateEndHandler = event => {
+        this.setState({ releaseDateEnd: event.target.value });
+    }
 
     render() {
         const { classes } = this.props;
@@ -198,7 +240,7 @@ class Home extends Component {
 
 
                                             {this.state.genresList.map(genre => (
-                                                <MenuItem key={"genre"+genre.id} value={genre.genre}>
+                                                <MenuItem key={"genre" + genre.id} value={genre.genre}>
                                                     <Checkbox checked={this.state.genres.indexOf(genre.genre) > -1} />
                                                     <ListItemText primary={genre.genre} />
                                                 </MenuItem>
@@ -219,7 +261,7 @@ class Home extends Component {
 
 
                                             {this.state.artistsList.map(artist => (
-                                                <MenuItem key={"artist"+artist.id} value={artist.first_name + " " + artist.last_name}>
+                                                <MenuItem key={"artist" + artist.id} value={artist.first_name + " " + artist.last_name}>
                                                     <Checkbox checked={this.state.artists.indexOf(artist.first_name + " " + artist.last_name) > -1} />
                                                     <ListItemText primary={artist.first_name + " " + artist.last_name} />
                                                 </MenuItem>
@@ -233,6 +275,7 @@ class Home extends Component {
                                             label="Release Date Start"
                                             type="date"
                                             defaultValue=""
+                                            onChange={this.releaseDateStartHandler}
                                             InputLabelProps={{ shrink: true }}
                                         />
                                     </FormControl>
@@ -242,11 +285,12 @@ class Home extends Component {
                                             label="Release Date End"
                                             type="date"
                                             defaultValue=""
+                                            onChange={this.releaseDateEndHandler}
                                             InputLabelProps={{ shrink: true }}
                                         />
                                     </FormControl>
                                     <div className="apply-btn">
-                                        <Button variant="contained" color="primary" >Apply</Button>
+                                        <Button onClick={() => this.filterApplyHandler()} variant="contained" color="primary" >Apply</Button>
                                     </div>
                                 </CardContent>
                             </Card>
