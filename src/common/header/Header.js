@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import './Header.css';
 import Button from '@material-ui/core/Button';
 import logo from '../../assets/logo.svg';
@@ -12,8 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import BookShow from '../../screens/bookShow/BookShow';
-
+import { Link } from 'react-router-dom';
 
 
 
@@ -87,11 +85,7 @@ class Header extends Component {
         this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
         this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
     }
-    bookShowHandler = (e) => {
-        ReactDOM.render(<BookShow />, document.getElementById('root')
-        );
 
-    }
 
     inputUsernameChangeHandler = (e) => {
         this.setState({ username: e.target.value });
@@ -134,7 +128,11 @@ class Header extends Component {
                     </div>
                     {this.props.showBookShowButton === "true" ?
                         <div className="book-show-btn">
-                            <Button variant="contained" color="primary" onClick={this.bookShowHandler}> Book Show</Button>
+                            <Link to={"/bookshow/" + this.props.id}>
+                                <Button variant="contained" color="primary">
+                                    Book Show
+                                </Button>
+                            </Link>
                         </div> : ""}
 
                 </header>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import './Home.css';
 import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
@@ -21,7 +20,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Detail from "../../screens/details/Detail";
 
 const styles = theme => ({
     root: {
@@ -76,7 +74,7 @@ class Home extends Component {
         this.setState({ artists: event.target.value });
     }
     movieClickHandler = (movieId) => {
-        ReactDOM.render(<Detail movieId={movieId} />, document.getElementById('root'));
+        this.props.history.push('/movie/' + movieId);
     }
 
 
@@ -101,8 +99,8 @@ class Home extends Component {
                             <GridList cellHeight={350} cols={3} className={classes.gridListMain}>
                                 {moviesData.map(movie => (
                                     <GridListTile
-                                   
-                                     onClick={() => this.movieClickHandler(movie.id)}
+
+                                        onClick={() => this.movieClickHandler(movie.id)}
                                         className="released-movie-grid-item" key={"grid" + movie.id}>
                                         <img src={movie.poster_url} className="movie-poster" alt={movie.title} />
                                         <GridListTileBar
@@ -135,7 +133,7 @@ class Home extends Component {
                                             onChange={this.genreSelectHandler}
                                         >
 
-                                            <MenuItem value="0">None</MenuItem>
+                                    
                                             {genres.map(genre => (
                                                 <MenuItem key={genre.id} value={genre.name}>
                                                     <Checkbox checked={this.state.genres.indexOf(genre.name) > -1} />
@@ -156,7 +154,7 @@ class Home extends Component {
                                             onChange={this.artistSelectHandler}
                                         >
 
-                                            <MenuItem value="0">None</MenuItem>
+                                            
                                             {artists.map(artist => (
                                                 <MenuItem key={artists.id} value={artist.first_name + " " + artist.last_name}>
                                                     <Checkbox checked={this.state.artists.indexOf(artist.first_name + " " + artist.last_name) > -1} />
