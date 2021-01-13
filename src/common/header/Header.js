@@ -53,7 +53,7 @@ class Header extends Component {
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
-            loggedIn: sessionStorage.getItem("access-token") == null ? false : true 
+            loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
     }
 
@@ -94,7 +94,7 @@ class Header extends Component {
     loginClickHandler = () => {
         this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
         this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
-        
+
         let dataLogin = null;
         let xhrLogin = new XMLHttpRequest();
         let that = this;
@@ -106,7 +106,7 @@ class Header extends Component {
                 that.setState({
                     loggedIn: true
                 });
-               
+
                 that.closeModalHandler();
             }
         });
@@ -116,7 +116,7 @@ class Header extends Component {
         xhrLogin.setRequestHeader("Content-Type", "application/json");
         xhrLogin.setRequestHeader("Cache-Control", "no-cache");
         xhrLogin.send(dataLogin);
-    
+
     }
     inputUsernameChangeHandler = (e) => {
         this.setState({ username: e.target.value });
@@ -190,9 +190,19 @@ class Header extends Component {
                             </Button>
                         </div>
                     }
-                   
-                    {this.props.showBookShowButton === "true" ?
-                        <div className="bookshow-button">
+
+                     {/* when not logged in bookshow trigger login modal */}
+                     {this.props.showBookShowButton === "true" && !this.state.loggedIn
+                        ? <div className="bookshow-button">
+                            <Button variant="contained" color="primary" onClick={this.openModalHandler}>
+                                Book Show
+                            </Button>
+                        </div>
+                        : ""
+                    }
+                        {/* when logged in bookshow trigger book show component */}
+                        {this.props.showBookShowButton === "true" && this.state.loggedIn
+                        ? <div className="bookshow-button">
                             <Link to={"/bookshow/" + this.props.id}>
                                 <Button variant="contained" color="primary">
                                     Book Show
