@@ -17,7 +17,11 @@ class Detail extends Component {
     constructor() {
         super();
         this.state = {
-            movie: {},
+            movie: {
+                artists: [],
+                genres: [],
+                trailer_url: "",
+            },
             starIcons: [
                 {
                     id: 1,
@@ -49,17 +53,25 @@ class Detail extends Component {
     }
 
     componentWillMount() {
-        let currentState = this.state;
-        currentState.movie = moviesData.filter(
-            (mov) => {
-                return mov.id === this.props.match.params.id
+        let that = this;
+        let dataMovie = null;
+        let xhrMovie = new XMLHttpRequest();
+        xhrMovie.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    movie: JSON.parse(this.responseText)
+                });
             }
-        )[0];
-        this.setState({ currentState });
-       
+        });
+
+        xhrMovie.open("GET", this.props.baseUrl + "movies/"+this.props.match.params.id);
+        xhrMovie.setRequestHeader("Cache-Control", "no-cache");
+        xhrMovie.send(dataMovie);
+
+
     }
 
-    
+
     _onReady(event) {
         // access to player in all event handlers via event.target
         event.target.pauseVideo();
@@ -67,15 +79,15 @@ class Detail extends Component {
     artistClickHandler = (url) => {
         window.location = url;
     }
-    starClickHandler= (id)=>{
-        let starList=[];
-        for(let star of this.state.starIcons){
-            let starNode=star;
+    starClickHandler = (id) => {
+        let starList = [];
+        for (let star of this.state.starIcons) {
+            let starNode = star;
             //if a star is click all the stars in left should turn yellow and right turn black
             if (star.id <= id) {
                 starNode.color = "yellow";
             }
-            else{
+            else {
                 starNode.color = "black";
             }
             starList.push(starNode);
@@ -94,9 +106,9 @@ class Detail extends Component {
         }
         return (
             <div className="details">
-                 <Header baseUrl={this.props.baseUrl} id={this.props.match.params.id} showBookShowButton="true" />
+                <Header baseUrl={this.props.baseUrl} id={this.props.match.params.id} showBookShowButton="true" />
                 <div className="back">
-                <Typography>
+                    <Typography>
                         <Link to="/">  &#60; Back to Home</Link>
                     </Typography>
                 </div>
@@ -153,11 +165,11 @@ class Detail extends Component {
                             </span>
                         </Typography>
 
-                        {this.state.starIcons.map(star =>(
+                        {this.state.starIcons.map(star => (
                             <StarBorderIcon
-                            className={star.color}
-                            key={"star"+star.id}
-                            onClick={()=>this.starClickHandler(star.id)}/>
+                                className={star.color}
+                                key={"star" + star.id}
+                                onClick={() => this.starClickHandler(star.id)} />
                         ))}
 
                         <div>
