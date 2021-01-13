@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './Home.css';
 import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
-import moviesData from '../../assets/movieData';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -12,8 +11,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-import genres from "../../common/genre";
-import artists from "../../common/artists";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -62,7 +59,8 @@ class Home extends Component {
             releasedMovies: [],
             genres: [], // genre user select
             genresList:[],//genre from api
-            artists: [],
+            artists: [], //artists user selects
+            artistsList:[], //artists from api
 
         }
     }
@@ -110,6 +108,21 @@ class Home extends Component {
         xhrGenres.open("GET", this.props.baseUrl + "genres");
         xhrGenres.setRequestHeader("Cache-Control", "no-cache");
         xhrGenres.send(dataGenres);
+
+         // getting artists from api
+         let dataArtists= null;
+         let xhrArtists = new XMLHttpRequest();
+         xhrArtists.addEventListener("readystatechange", function () {
+             if (this.readyState === 4) {
+                 that.setState({
+                     artistsList: JSON.parse(this.responseText).artists
+                 });
+             }
+         });
+ 
+         xhrArtists.open("GET", this.props.baseUrl + "artists");
+         xhrArtists.setRequestHeader("Cache-Control", "no-cache");
+         xhrArtists.send(dataArtists);
 
     }
 
@@ -205,8 +218,8 @@ class Home extends Component {
                                         >
 
 
-                                            {artists.map(artist => (
-                                                <MenuItem key={artists.id} value={artist.first_name + " " + artist.last_name}>
+                                            {this.state.artistsList.map(artist => (
+                                                <MenuItem key={"artist"+artist.id} value={artist.first_name + " " + artist.last_name}>
                                                     <Checkbox checked={this.state.artists.indexOf(artist.first_name + " " + artist.last_name) > -1} />
                                                     <ListItemText primary={artist.first_name + " " + artist.last_name} />
                                                 </MenuItem>
